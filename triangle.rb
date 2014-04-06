@@ -15,7 +15,11 @@
 #
 def triangle(a, b, c)
   # WRITE THIS CODE
-  if a == b && b == c
+  if a <= 0 || b <= 0 || c <= 0
+    raise TriangleError, message: "A triangle side cannot be of negative value, or zero"
+  elsif (a + b) <= c || (b + c) <= a || (c + a) <= b
+    raise TriangleError, message: "A triangle side cannot be greater than or equal to the sum of the other sides"
+  elsif a == b && b == c
     :equilateral
   elsif a == b || b == c || c == a
     :isosceles
