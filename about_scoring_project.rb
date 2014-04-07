@@ -28,9 +28,31 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 # More scoring examples are given in the tests below:
 #
 # Your goal is to write the score method.
+POINTS = {
+  5 => 50,
+  1 => 100
+}
 
 def score(dice)
   # You need to write this method
+  result = []
+  bonus_points = dice.select { |number| dice.count(number) >= 3 }.uniq
+
+  unless bonus_points.empty?
+    result << extract_bonus_points(bonus_points.first)
+    3.times { dice.delete_at(dice.index(bonus_points.first)) }
+  end
+
+  dice.each { |number| result << resolve(number) }
+  result.reduce(0) {|sum, num| sum += num}
+end
+
+def extract_bonus_points(number)
+  number == 1 ?  1000 : number * 100
+end
+
+def resolve(number)
+  POINTS[number] ? POINTS[number] : 0
 end
 
 class AboutScoringProject < Neo::Koan
@@ -73,5 +95,4 @@ class AboutScoringProject < Neo::Koan
     assert_equal 1200, score([1,1,1,1,1])
     assert_equal 1150, score([1,1,1,5,1])
   end
-
 end
